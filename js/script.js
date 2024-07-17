@@ -3,13 +3,13 @@ $(document).ready(function () {
 
   async function fetchData() {
     try {
-      var customersResponse = await fetch("http://localhost:5000/customers");
-      var customers = await customersResponse.json(); // ==>Array
+      const customersResponse = await fetch("http://localhost:5000/customers");
+      const customers = await customersResponse.json(); // ==>Array
 
-      var transactionsResponse = await fetch(
+      const transactionsResponse = await fetch(
         "http://localhost:5000/transactions"
       );
-      var transactions = await transactionsResponse.json(); //  ==>Array
+      const transactions = await transactionsResponse.json(); //  ==>Array
 
       populateTable(customers, transactions);
 
@@ -31,24 +31,24 @@ $(document).ready(function () {
   }
 
   function populateTable(customers, transactions) {
-    var tableBody = $("#customerTable");
+    const tableBody = $("#customerTable");
     tableBody.empty();
 
-    var nameFilter = $("#nameFilter").val().toLowerCase();
-    var amountFilter = $("#amountFilter").val();
+    const nameFilter = $("#nameFilter").val().toLowerCase();
+    const amountFilter = $("#amountFilter").val();
 
-    for (var i = 0; i < customers.length; i++) {
-      var customer = customers[i];
-      var customerTransactions = transactions.filter(function (transaction) {
+    for (let i = 0; i < customers.length; i++) {
+      const customer = customers[i];
+      const customerTransactions = transactions.filter(function (transaction) {
         return transaction.customer_id == customer.id;
       });
 
-      var transactionDetails = "";
-      var hasMatchingTransaction = false;
-      var dailyTransactions = {}; // Object to store daily transaction amounts
+      let transactionDetails = "";
+      let hasMatchingTransaction = false;
+      const dailyTransactions = {}; // Object to store daily transaction amounts
 
-      for (var j = 0; j < customerTransactions.length; j++) {
-        var transaction = customerTransactions[j];
+      for (let j = 0; j < customerTransactions.length; j++) {
+        const transaction = customerTransactions[j];
         if (amountFilter && transaction.amount != amountFilter) {
           continue; // Skip transaction if amount is not equal to entered value
         }
@@ -58,7 +58,7 @@ $(document).ready(function () {
         hasMatchingTransaction = true;
 
         // Extract date (year-month-day) and update dailyTransactions object
-        var transactionDate = new Date(transaction.date).toLocaleDateString();
+        const transactionDate = new Date(transaction.date).toLocaleDateString();
         if (dailyTransactions[transactionDate]) {
           dailyTransactions[transactionDate] += transaction.amount;
         } else {
@@ -70,7 +70,7 @@ $(document).ready(function () {
         customer.name.toLowerCase().includes(nameFilter) &&
         hasMatchingTransaction
       ) {
-        var row = `
+        const row = `
           <tr>
             <td>${customer.name}</td>
             <td>${transactionDetails}</td>
@@ -87,8 +87,8 @@ $(document).ready(function () {
 
     // Add click event listener for chart button
     $(".btn-primary").click(function () {
-      var customerId = $(this).data("customer-id");
-      var dailyTransactions = $(this).data("daily-transactions"); // Get daily transactions for the clicked customer
+      const customerId = $(this).data("customer-id");
+      const dailyTransactions = $(this).data("daily-transactions"); // Get daily transactions for the clicked customer
 
       // Clear existing chart
       if (currentChart) {
@@ -100,12 +100,12 @@ $(document).ready(function () {
   }
 
   function showTransactionChart(customerId, dailyTransactions) {
-    var chartContainer = document.getElementById("transactionChart");
-    var chartCtx = chartContainer.getContext("2d");
+    const chartContainer = document.getElementById("transactionChart");
+    const chartCtx = chartContainer.getContext("2d");
 
     // Prepare chart data (labels and corresponding amounts)
-    var chartLabels = Object.keys(dailyTransactions);
-    var chartData = Object.values(dailyTransactions);
+    const chartLabels = Object.keys(dailyTransactions);
+    const chartData = Object.values(dailyTransactions);
 
     currentChart = new Chart(chartCtx, {
       type: "bar",
